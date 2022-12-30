@@ -1,0 +1,133 @@
+using System;
+
+namespace DomaciUloha4
+{
+    class Program
+    {
+        static void Main()
+        {
+            Console.WriteLine("Auto jeho obsah a obvod jednotlivych komponent:");
+
+            var kruh = new Kruh
+            {
+                Jmeno = "kolo",
+                Radius = 1.2,
+                Barva = "Cerne"
+            };
+            Console.WriteLine(kruh);
+
+            var obdelnikModry = new Obdelnik
+            {
+                Jmeno = "podvozek",
+                Delka = 20,
+                Sirka = 4,
+                Barva = "Modry"
+            };
+            Console.WriteLine(obdelnikModry);
+
+            var obdelnikZeleny = new Obdelnik
+            {
+                Jmeno = "vnejsi kabina",
+                Delka = 3,
+                Sirka = 8,
+                Barva = "Zelena"
+            };
+            Console.WriteLine(obdelnikZeleny);
+
+            var obdelnikBily = new Obdelnik
+            {
+                Jmeno = "vnitrni kabina",
+                Delka = 7,
+                Sirka = 2,
+                Barva = "Bila"
+            };
+            Console.WriteLine(obdelnikBily);
+
+            var trojuhelnik = new Trojuhelnik
+            {
+                Jmeno = "ridic",
+                Delka = 2,
+                Sirka = 1,
+                Barva = "Cerveny"
+            };
+            Console.WriteLine(trojuhelnik);
+
+            double obsahAuta = trojuhelnik.Obsah -
+                               obdelnikBily.Obsah +
+                               obdelnikZeleny.Obsah +
+                               obdelnikModry.Obsah +
+                               kruh.Obsah * 2;
+
+            Console.WriteLine($"Obsah auta je: {obsahAuta}");
+
+            Console.ReadKey();
+        }
+    }
+
+    abstract class GeometrickyUtvar
+    {
+        public string Jmeno { get; set; }
+        public double Delka { get; set; }
+        public double Sirka { get; set; }
+        public double Radius { get; set; }
+        public string Barva { get; set; }
+
+        public double Obsah
+        {
+            get { return VupocetObsahu(); }
+        }
+
+        public double Obvod
+        {
+            get { return VypocetObvodu(); }
+        }
+
+        protected abstract double VypocetObvodu();
+        protected abstract double VupocetObsahu();
+
+        public override string ToString()
+        {
+            return $"Obvod komponenty {Jmeno} je: {Obvod}";
+        }
+    }
+
+    class Obdelnik : GeometrickyUtvar
+    {
+        protected override double VypocetObvodu()
+        {
+            return Delka + Delka + Sirka + Sirka;
+        }
+        
+        protected override double VupocetObsahu()
+        {
+            return Delka * Sirka;
+        }
+    }
+
+    class Trojuhelnik : GeometrickyUtvar
+    {
+        protected override double VypocetObvodu()
+        {
+            return Delka + Delka + Sirka;
+        }
+        
+        protected override double VupocetObsahu()
+        {
+            var delenyObvod = Obvod / 2;
+            return Math.Sqrt(delenyObvod * (delenyObvod - Delka) * (delenyObvod - Delka) * (delenyObvod - Sirka));
+        }
+    }
+
+    class Kruh : GeometrickyUtvar
+    {
+        protected override double VypocetObvodu()
+        {
+            return 2 * Math.PI * Radius;
+        }
+
+        protected override double VupocetObsahu()
+        {
+            return Math.PI * Radius * Radius;
+        }
+    }
+}
